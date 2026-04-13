@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html data-theme="dark">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ESP32 Sensor Console</title>
+    <!-- Dashboard assets served from the ESP32 (SPIFFS). -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand">
+          <div class="brand-title">
+            <span class="brand-name">GoTree Sensor Box</span>
+          </div>
+          <div class="brand-sub">Group 2</div>
+        </div>
+        <div class="status-leds">
+          <div id="ledExp" class="led-indicator" title="Expander Status">EXP</div>
+          <div id="ledDac" class="led-indicator" title="DAC Status">DAC</div>
+        </div>
+      </div>
+
+      <div class="topbar-center">
+        <div class="nav-controls nav-controls-square" role="group" aria-label="Robot controls">
+          <button class="nav-btn square primary" id="btnInitialCheckupRoutine" type="button">
+            Initial<br />Checkup
+          </button>
+          <button class="nav-btn square primary" id="btnGotoPost" type="button" disabled>
+            Go to Post
+          </button>
+          <button class="nav-btn square primary" id="btnGotoH" type="button" disabled>
+            Go to H
+          </button>
+          <button class="nav-btn square stop" id="btnStop" type="button" disabled>
+            STOP
+          </button>
+          <button class="nav-btn square ghost" id="btnThemeToggle" type="button">
+            Light/Dark Mode
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="dashboard">
+      <section class="decision-stack" aria-label="Decision status">
+        <div id="decisionBox" class="decision-box decision-stop">
+          <div id="decisionText" class="decision-text">STOP</div>
+          <div id="decisionPhase" class="decision-phase">PHASE --</div>
+        </div>
+        <div id="targetBox" class="target-box hidden">
+          <span class="target-label">TARGET</span>
+          <span id="targetText" class="target-text"></span>
+        </div>
+      </section>
+
+      <section class="status-grid" aria-label="System health">
+        <div id="statusExp" class="status-indicator">EXP</div>
+        <div id="statusDac" class="status-indicator">DAC</div>
+        <div id="statusHdop" class="status-indicator">HDOP --</div>
+        <div id="statusSats" class="status-indicator">SATS --</div>
+      </section>
+
+      <section class="metrics-line" aria-label="Navigation metrics">
+        <span id="metricDistance">Distance: -- m</span>
+        <span id="metricHeading">Heading: -- deg</span>
+      </section>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
