@@ -290,9 +290,14 @@ static void setAction(const char* a) {
 static void motorsStop() {
   setAction("STOP");
   if (checkupRunning) return;
-  if (!motorMutex) { stop(); return; }
+  if (!motorMutex) { 
+    // stop();
+    displayMovement("stop()");
+    return; 
+  }
   if (xSemaphoreTake(motorMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-    stop();
+    // stop();
+    displayMovement("stop()");
     xSemaphoreGive(motorMutex);
   }
 }
@@ -301,9 +306,14 @@ static void driveStraight(int pwm) {
   (void)pwm;
   setAction("FORWARD");
   if (checkupRunning) return;
-  if (!motorMutex) { forward(DRIVE_PERCENT); return; }
+  if (!motorMutex) { 
+    // forward(DRIVE_PERCENT);
+    displayMovement("forward(28)");
+    return; 
+  }
   if (xSemaphoreTake(motorMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-    forward(DRIVE_PERCENT);
+    // forward(DRIVE_PERCENT);
+    displayMovement("forward(28)");
     xSemaphoreGive(motorMutex);
   }
 }
@@ -312,9 +322,14 @@ static void driveBackward(int pwm) {
   (void)pwm;
   setAction("BACKWARD");
   if (checkupRunning) return;
-  if (!motorMutex) { backward(DRIVE_PERCENT); return; }
+  if (!motorMutex) { 
+    // backward(DRIVE_PERCENT);
+    displayMovement("backward(28)");
+    return; 
+  }
   if (xSemaphoreTake(motorMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-    backward(DRIVE_PERCENT);
+    // backward(DRIVE_PERCENT);
+    displayMovement("backward(28)");
     xSemaphoreGive(motorMutex);
   }
 }
@@ -323,9 +338,14 @@ static void driveDifferential(int leftPWM, int rightPWM) {
   (void)leftPWM; (void)rightPWM;
   setAction("FORWARD");
   if (checkupRunning) return;
-  if (!motorMutex) { forward(DRIVE_PERCENT); return; }
+  if (!motorMutex) { 
+    // forward(DRIVE_PERCENT);
+    displayMovement("forward(28)");
+    return; 
+  }
   if (xSemaphoreTake(motorMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-    forward(DRIVE_PERCENT);
+    // forward(DRIVE_PERCENT);
+    displayMovement("forward(28)");
     xSemaphoreGive(motorMutex);
   }
 }
@@ -340,13 +360,23 @@ static void turnInPlaceSigned(int pwmSigned) {
   }
 
    if (!motorMutex) {
-    if (pwmSigned < 0) rotateLeft(SPEED_LIMIT);   // ✅ Always 28
-    else rotateRight(SPEED_LIMIT);                 // ✅ Always 28
+    if (pwmSigned < 0) { 
+      // rotateLeft(SPEED_LIMIT);
+      displayMovement("rotateLeft(28)");
+    } else { 
+      // rotateRight(SPEED_LIMIT);
+      displayMovement("rotateRight(28)");
+    }
     return;
   }
  if (xSemaphoreTake(motorMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-    if (pwmSigned < 0) rotateLeft(SPEED_LIMIT);   // ✅ Always 28
-    else rotateRight(SPEED_LIMIT);                 // ✅ Always 28
+    if (pwmSigned < 0) { 
+      // rotateLeft(SPEED_LIMIT);
+      displayMovement("rotateLeft(28)");
+    } else { 
+      // rotateRight(SPEED_LIMIT);
+      displayMovement("rotateRight(28)");
+    }
     xSemaphoreGive(motorMutex);
   }
 }
@@ -354,18 +384,28 @@ static void turnInPlaceSigned(int pwmSigned) {
 static void stepLeft()  {
   setAction("STEP_LEFT");
   if (checkupRunning) return;
-  if (!motorMutex) { stepLeft(BODY_STEP_PERCENT); return; }
+  if (!motorMutex) { 
+    // stepLeft(BODY_STEP_PERCENT);
+    displayMovement("stepLeft(15)");
+    return; 
+  }
   if (xSemaphoreTake(motorMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-    stepLeft(BODY_STEP_PERCENT);
+    // stepLeft(BODY_STEP_PERCENT);
+    displayMovement("stepLeft(15)");
     xSemaphoreGive(motorMutex);
   }
 }
 static void stepRight() {
   setAction("STEP_RIGHT");
   if (checkupRunning) return;
-  if (!motorMutex) { stepRight(BODY_STEP_PERCENT); return; }
+  if (!motorMutex) { 
+    // stepRight(BODY_STEP_PERCENT);
+    displayMovement("stepRight(15)");
+    return; 
+  }
   if (xSemaphoreTake(motorMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-    stepRight(BODY_STEP_PERCENT);
+    // stepRight(BODY_STEP_PERCENT);
+    displayMovement("stepRight(15)");
     xSemaphoreGive(motorMutex);
   }
 }
@@ -616,6 +656,24 @@ static void wallFollowLeft_Z3_200(float leftCm) {
 // ================================================================
 // OLED
 // ================================================================
+
+// Helper function to display movement function calls on OLED
+static void displayMovement(const char* functionName) {
+  if (!i2cMutex) return;
+  if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(15)) != pdTRUE) return;
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.println("Movement Call:");
+  display.setCursor(0, 16);
+  display.print(functionName);
+  display.display();
+  
+  xSemaphoreGive(i2cMutex);
+}
+
 static void updateOLED(const Telemetry& snap) {
   if (!i2cMutex) return;
   if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(15)) != pdTRUE) return;

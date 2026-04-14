@@ -16,7 +16,7 @@
 #include <Adafruit_BNO055.h> 
 #include <math.h>
 
-#include "controller.h" 
+// #include "controller.h" // Commented out - not required for navigation logic 
 
 // ==========================================
 // 1. COORDINATE SYSTEM & CONSTANTS
@@ -409,14 +409,14 @@ void handleSetMode() {
 
 void handleToggleRC() { 
     rcPowerState = !rcPowerState; 
-    if(!rcPowerState) stop(); 
-    RConoffswitch(); 
+    // if(!rcPowerState) stop();  // Commented out - controller.h not included
+    // RConoffswitch();  // Commented out - controller.h not included
     server.send(200, "text/plain", "OK"); 
 }
 
 void handleInitialize() { 
     server.send(200, "text/plain", "Initializing..."); 
-    initialcheckuproutine(); 
+    // initialcheckuproutine();  // Commented out - controller.h not included
     robotInitialized = true; 
     rcPowerState = true; 
 }
@@ -429,13 +429,13 @@ void handleStatus() {
 }
 
 void applyPhysicalMovement() {
-    if (!rcPowerState || !robotInitialized) { stop(); return; }
-    if (unifiedMovementCommand == "FORWARD") forward(DRIVE_SPEED);
-    else if (unifiedMovementCommand == "TURN LEFT") rotateLeft(DRIVE_SPEED);
-    else if (unifiedMovementCommand == "TURN RIGHT") rotateRight(DRIVE_SPEED);
-    else if (unifiedMovementCommand == "STEP LEFT") stepLeft(DRIVE_SPEED);
-    else if (unifiedMovementCommand == "STEP RIGHT") stepRight(DRIVE_SPEED);
-    else stop();
+    if (!rcPowerState || !robotInitialized) { display.println("stop()"); /* stop(); */ return; }
+    if (unifiedMovementCommand == "FORWARD") { display.println("forward(28)"); /* forward(DRIVE_SPEED); */ }
+    else if (unifiedMovementCommand == "TURN LEFT") { display.println("rotateLeft(28)"); /* rotateLeft(DRIVE_SPEED); */ }
+    else if (unifiedMovementCommand == "TURN RIGHT") { display.println("rotateRight(28)"); /* rotateRight(DRIVE_SPEED); */ }
+    else if (unifiedMovementCommand == "STEP LEFT") { display.println("stepLeft(28)"); /* stepLeft(DRIVE_SPEED); */ }
+    else if (unifiedMovementCommand == "STEP RIGHT") { display.println("stepRight(28)"); /* stepRight(DRIVE_SPEED); */ }
+    else { display.println("stop()"); /* stop(); */ }
 }
 
 // ==========================================
@@ -445,8 +445,8 @@ void setup() {
     Serial.begin(115200); 
     Wire.begin(SDA_PIN, SCL_PIN);
     
-    initExpMod(); 
-    initDAC();
+    // initExpMod();  // Commented out - controller.h not included
+    // initDAC();  // Commented out - controller.h not included
     
     if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) { for(;;); }
     display.clearDisplay(); 
