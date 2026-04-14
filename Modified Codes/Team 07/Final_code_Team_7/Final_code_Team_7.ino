@@ -41,7 +41,7 @@
 #include <ESPAsyncWebServer.h>
 #include <Adafruit_SSD1306.h>
 
-#include "Controller.h" // ✅ keep unchanged
+// #include "Controller.h" // ✅ keep unchanged
 
 /* ================= CONFIG ================= */
 #define SDA_PIN 21
@@ -217,12 +217,40 @@ static float measureDistance(int trigPin, int echoPin) {
 }
 
 /* ================= GO2 EXECUTION ================= */
-static void stopAllMotion() { stop(); }
+static void stopAllMotion() { 
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, 0);
+  display.println("stop()");
+  display.display();
+  // stop(); 
+}
 
 static void applyCmdToGo2(const char* cmd) {
-  if (!strcmp(cmd, "FORWARD")) forward(percent_routine);
-  else if (!strcmp(cmd, "TURN RIGHT")) rotateRight(percent_routine);
-  else if (!strcmp(cmd, "TURN LEFT")) rotateLeft(percent_routine);
+  if (!strcmp(cmd, "FORWARD")) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("forward(28)");
+    display.display();
+    // forward(percent_routine);
+  }
+  else if (!strcmp(cmd, "TURN RIGHT")) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("rotateRight(28)");
+    display.display();
+    // rotateRight(percent_routine);
+  }
+  else if (!strcmp(cmd, "TURN LEFT")) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("rotateLeft(28)");
+    display.display();
+    // rotateLeft(percent_routine);
+  }
   else stopAllMotion();
 }
 
@@ -245,13 +273,23 @@ static bool obstacleAvoidanceActive() {
   if (currentPhase == PHASE_H_WP2 && fHit) {
     if (!wp1to2_leftDone) {
       navCmd = "WP1->2 FRONT -> STEP LEFT(4s)";
-      stepLeft(percent_routine);
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setCursor(0, 0);
+      display.println("stepLeft(28)");
+      display.display();
+      // stepLeft(percent_routine);
       vTaskDelay(pdMS_TO_TICKS(4000));
       stopAllMotion();
       wp1to2_leftDone = true;
     } else {
       navCmd = "WP1->2 FRONT -> STEP RIGHT(4s)";
-      stepRight(percent_routine);
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setCursor(0, 0);
+      display.println("stepRight(28)");
+      display.display();
+      // stepRight(percent_routine);
       vTaskDelay(pdMS_TO_TICKS(4000));
       stopAllMotion();
     }
@@ -262,20 +300,57 @@ static bool obstacleAvoidanceActive() {
   // Front + Right covered -> STEP LEFT
   if (fHit && rHit) {
     navCmd = "FR+R -> STEP LEFT";
-    stepLeft(percent_routine);
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("stepLeft(28)");
+    display.display();
+    // stepLeft(percent_routine);
     return true;
   }
   // Front + Left covered  -> STEP RIGHT
   if (fHit && lHit) {
     navCmd = "FR+L -> STEP RIGHT";
-    stepRight(percent_routine);
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("stepRight(28)");
+    display.display();
+    // stepRight(percent_routine);
     return true;
   }
 
   // Fallback single-sensor rules
-  if (fHit) { navCmd = "FRONT -> STEP LEFT"; stepLeft(percent_routine); return true; }
-  if (rHit) { navCmd = "RIGHT -> STEP LEFT"; stepLeft(percent_routine); return true; }
-  if (lHit) { navCmd = "LEFT -> STEP RIGHT"; stepRight(percent_routine); return true; }
+  if (fHit) { 
+    navCmd = "FRONT -> STEP LEFT";
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("stepLeft(28)");
+    display.display();
+    // stepLeft(percent_routine);
+    return true; 
+  }
+  if (rHit) { 
+    navCmd = "RIGHT -> STEP LEFT";
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("stepLeft(28)");
+    display.display();
+    // stepLeft(percent_routine);
+    return true; 
+  }
+  if (lHit) { 
+    navCmd = "LEFT -> STEP RIGHT";
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("stepRight(28)");
+    display.display();
+    // stepRight(percent_routine);
+    return true; 
+  }
 
   return false;
 }
@@ -507,7 +582,15 @@ void taskNav(void*) {
         rightHoldStartMs = 0; // ✅ reset the 6s trigger
         stopAllMotion();
         navCmd = "COMPLETE";
-        if (!endLaydownDone) { lockLaydownStand(); endLaydownDone = true; }
+        if (!endLaydownDone) { 
+          display.clearDisplay();
+          display.setTextSize(2);
+          display.setCursor(0, 0);
+          display.println("lockLaydownStand()");
+          display.display();
+          // lockLaydownStand();
+          endLaydownDone = true; 
+        }
         navEnabled = false;
         currentPhase = PHASE_IDLE;
         break;
@@ -721,10 +804,10 @@ void setup() {
   display.println("Boot...");
   display.display();
 
-  bool expOk = initExpMod();
-  bool dacOk = initDAC();
-  Serial.printf("Controller: exp=%d dac=%d\n", expOk, dacOk);
-  stopAllMotion();
+  // bool expOk = initExpMod();
+  // bool dacOk = initDAC();
+  // Serial.printf("Controller: exp=%d dac=%d\n", expOk, dacOk);
+  // stopAllMotion();
 
   imuOk = bno.begin();
   if (imuOk) bno.setExtCrystalUse(true);
@@ -789,7 +872,12 @@ void setup() {
   });
 
   server.on("/laytoggle", HTTP_GET, [](AsyncWebServerRequest *r){
-    lockLaydownStand();
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 0);
+    display.println("lockLaydownStand()");
+    display.display();
+    // lockLaydownStand();
     r->send(200, "text/plain", "OK:LAY_TOGGLE");
   });
 

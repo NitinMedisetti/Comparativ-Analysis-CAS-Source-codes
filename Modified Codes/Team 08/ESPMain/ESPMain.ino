@@ -15,7 +15,7 @@
 #include "SensorData.h" 
 #include "Geolocation.h"
 #include "Navigation.h" 
-#include "Controller.h" 
+// #include "Controller.h"  // Disabled - running in simulation mode 
 
 // ==================================================================================
 // CONFIGURATION
@@ -210,18 +210,12 @@ void setup() {
 
     // 3. Hardware Auto-Detection
     Serial.print("Checking for Motor Controller Hardware...");
-    bool dacFound = initDAC();
-    bool expFound = initExpMod();
-
-    if (dacFound && expFound) {
-        motorHardwareAvailable = true;
-        Serial.println(" [FOUND]");
-        Serial.println("Running in ROBOT MODE (Motor commands enabled)");
-    } else {
-        motorHardwareAvailable = false;
-        Serial.println(" [MISSING]");
-        Serial.println("Running in KIT/SIMULATION MODE");
-    }
+    // bool dacFound = initDAC();
+    // bool expFound = initExpMod();
+    // Controller.h has been removed - running in SIMULATION MODE
+    motorHardwareAvailable = false;
+    Serial.println(" [DISABLED - Controller.h not included]");
+    Serial.println("Running in SIMULATION MODE (Display-only commands)");
     
     pinMode(DEV_LED_PIN, OUTPUT);
     if (!display.begin()) Serial.println("SSD1306 failed");
@@ -287,7 +281,12 @@ void loop() {
     else if (emergencyStopTriggered || isMissionPaused || !sharedData.is_mission_active) {
         if (motorHardwareAvailable) {
             if (xSemaphoreTake(i2cMutex, (TickType_t) 50) == pdTRUE) {
-                stop(); 
+                // stop(); 
+                display.m_display.clearDisplay();
+                display.m_display.setTextSize(2);
+                display.m_display.setCursor(0, 20);
+                display.m_display.println("stop()");
+                display.m_display.display();
                 xSemaphoreGive(i2cMutex);
             }
         }
@@ -302,13 +301,62 @@ void loop() {
         if (motorHardwareAvailable) {
             if (xSemaphoreTake(i2cMutex, (TickType_t) 50) == pdTRUE) {
                 switch (moveCmd) {
-                    case NAV_FORWARD:    forward(28); break; 
-                    case NAV_TURN_LEFT:  rotateLeft(28); break; 
-                    case NAV_TURN_RIGHT: rotateRight(28); break;
-                    case NAV_STRAFE_LEFT: stepLeft(28); break; 
-                    case NAV_STRAFE_RIGHT: stepRight(28); break;
-                    case NAV_WAIT:       stop(); break;
-                    default:             stop(); break;
+                    case NAV_FORWARD:
+                        // forward(28);
+                        display.m_display.clearDisplay();
+                        display.m_display.setTextSize(2);
+                        display.m_display.setCursor(0, 20);
+                        display.m_display.println("forward(28)");
+                        display.m_display.display();
+                        break; 
+                    case NAV_TURN_LEFT:
+                        // rotateLeft(28);
+                        display.m_display.clearDisplay();
+                        display.m_display.setTextSize(2);
+                        display.m_display.setCursor(0, 20);
+                        display.m_display.println("rotateLeft(28)");
+                        display.m_display.display();
+                        break; 
+                    case NAV_TURN_RIGHT:
+                        // rotateRight(28);
+                        display.m_display.clearDisplay();
+                        display.m_display.setTextSize(2);
+                        display.m_display.setCursor(0, 20);
+                        display.m_display.println("rotateRight(28)");
+                        display.m_display.display();
+                        break;
+                    case NAV_STRAFE_LEFT:
+                        // stepLeft(28);
+                        display.m_display.clearDisplay();
+                        display.m_display.setTextSize(2);
+                        display.m_display.setCursor(0, 20);
+                        display.m_display.println("stepLeft(28)");
+                        display.m_display.display();
+                        break; 
+                    case NAV_STRAFE_RIGHT:
+                        // stepRight(28);
+                        display.m_display.clearDisplay();
+                        display.m_display.setTextSize(2);
+                        display.m_display.setCursor(0, 20);
+                        display.m_display.println("stepRight(28)");
+                        display.m_display.display();
+                        break;
+                    case NAV_WAIT:
+                        // stop();
+                        display.m_display.clearDisplay();
+                        display.m_display.setTextSize(2);
+                        display.m_display.setCursor(0, 20);
+                        display.m_display.println("stop()");
+                        display.m_display.display();
+                        break;
+                    default:
+                        // stop();
+                        display.m_display.clearDisplay();
+                        display.m_display.setTextSize(2);
+                        display.m_display.setCursor(0, 20);
+                        display.m_display.println("stop()");
+                        display.m_display.display();
+                        break;
                 }
                 xSemaphoreGive(i2cMutex);
             }
@@ -328,7 +376,15 @@ void InitTaskCode(void * pvParameters) {
     Serial.println(">>> EXECUTING INITIALIZATION ROUTINE...");
     
     if (motorHardwareAvailable) {
-        initialcheckuproutine(); 
+        // initialcheckuproutine(); 
+        display.m_display.clearDisplay();
+        display.m_display.setTextSize(2);
+        display.m_display.setCursor(0, 20);
+        display.m_display.println("initialcheckup");
+        display.m_display.setCursor(0, 45);
+        display.m_display.println("routine()");
+        display.m_display.display();
+        delay(2000);
     } else {
         Serial.println("Simulation Mode: Skipping physical movement routine.");
         delay(2000); 
