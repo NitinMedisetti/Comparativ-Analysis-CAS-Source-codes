@@ -50,7 +50,7 @@
 #include "webpage.h"
 #include "OLED_Display.h"
 #include "path.h"
-#include "Controller.h"
+// #include "Controller.h"  // No longer needed: expMod and DAC removed from circuit
 
 volatile bool checkupRequested = false;
 
@@ -654,7 +654,8 @@ void pathToH(void *pvParameters) {
       setCmd(cmd.c_str());
       displayCommandOnOLED(cmd.c_str());
       if(Robot_connected)
-      lockLaydownStand();
+      displayCommandOnOLED("lockLaydownStand()");
+      // lockLaydownStand();
       pathToHHandle = NULL;   // optional: better if protected, but usually OK here
       vTaskDelete(NULL); 
     }
@@ -858,7 +859,8 @@ void stopAllMovement() {
   pros = 3 ;
 
   if(Robot_connected)
-  stop();
+  displayCommandOnOLED("stop()");
+  // stop();
 
   near = false;
   verynear = false;
@@ -868,7 +870,8 @@ void stopAllMovement() {
 void init_Check() {
   if(Robot_connected){
     suspendAllRobotTasks();
-    initialcheckuproutine();
+    displayCommandOnOLED("initialcheckuproutine()");
+    // initialcheckuproutine();
     resumeAllRobotTasks();
   }
   else{
@@ -922,25 +925,32 @@ void robo_control(void *pvParameters){
     }
     getCmd(cmd, sizeof(cmd));
     if((strcmp(cmd,"FWD")==0)){
-      forward(28);
+      displayCommandOnOLED("forward(28)");
+      // forward(28);
     }
     if((strcmp(cmd,"LEFT")==0)){
-      stepLeft(28);
+      displayCommandOnOLED("stepLeft(28)");
+      // stepLeft(28);
     }
     if((strcmp(cmd,"RIGHT")==0)){
-      stepRight(28);
+      displayCommandOnOLED("stepRight(28)");
+      // stepRight(28);
     }
     if((strcmp(cmd,"ROT_L")==0)){
-      rotateLeft(28);
+      displayCommandOnOLED("rotateLeft(28)");
+      // rotateLeft(28);
     }
     if((strcmp(cmd,"ROT_R")==0)){
-      rotateRight(28);
+      displayCommandOnOLED("rotateRight(28)");
+      // rotateRight(28);
     }
     if((strcmp(cmd,"STOP")==0)){
-      stop();
+      displayCommandOnOLED("stop()");
+      // stop();
     }
     if((strcmp(cmd,"BACK")==0)){
-      backward(28);
+      displayCommandOnOLED("backward(28)");
+      // backward(28);
     }
     vTaskDelay(pdMS_TO_TICKS(90)); // -------------------------------------------------------------------------------------------------------------
   }
@@ -984,16 +994,16 @@ void setup() {
   }
 
   // 4. Initial Physical Checkup
-  // Note: Ensure initialcheckuproutine() uses vTaskDelay internally
-  Serial.println("Running Robot Checkup Routine...");
-  if (!initExpMod() || !initDAC()) {
-  Serial.println("----------------FAILED---------------ROBOT NOT CONNECTED");
-  }
-  else{
+  // Note: expMod and DAC are no longer in the electrical circuit
+  // Serial.println("Running Robot Checkup Routine...");
+  // if (!initExpMod() || !initDAC()) {
+  // Serial.println("----------------FAILED---------------ROBOT NOT CONNECTED");
+  // }
+  // else{
   Robot_connected = true ;
   Serial.println("System ready. Launching Tasks...");
   xTaskCreatePinnedToCore(robo_control,   "RobotControl", 4096, NULL, 2, &hRobotControl, 0);
-  }
+  // }
   // 5. Create Tasks (Launch the engine)
 
   // Core 0 Tasks
