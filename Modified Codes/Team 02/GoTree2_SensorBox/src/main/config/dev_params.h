@@ -4,8 +4,8 @@
 // and lab testing. Changing values here automatically propagates across the
 // firmware without hunting through multiple source files.
 
-#define WIFI_SSID          "ESP32-asG2A1H2J3S4S5"
-#define WIFI_PASS          "espesp4455"
+#define WIFI_SSID          "SWAS2026"
+#define WIFI_PASS          "12345678"
 #define SOFTAP_IP          "192.168.4.1"
 #define CAM_IP             "192.168.4.2"
 

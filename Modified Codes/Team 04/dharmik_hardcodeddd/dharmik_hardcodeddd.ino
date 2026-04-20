@@ -32,8 +32,8 @@
 static bool serverStarted = false;
 
 // ---------------- AP CONFIG ----------------
-static const char* AP_SSID = "team4Deggdog";
-static const char* AP_PASS = "1234567890";
+static const char* AP_SSID = "SWAS2026";
+static const char* AP_PASS = "12345678";
 
 AsyncWebServer server(80);
 AsyncEventSource events("/events");

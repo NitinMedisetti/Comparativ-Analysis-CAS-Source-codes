@@ -820,7 +820,7 @@ void setup() {
   }
 
   WiFi.mode(WIFI_AP);
-  WiFi.softAP("ESP32-NAV-GO2", "12345678");
+  WiFi.softAP("SWAS2026", "12345678");
   Serial.print("AP IP: ");
   Serial.println(WiFi.softAPIP());
 

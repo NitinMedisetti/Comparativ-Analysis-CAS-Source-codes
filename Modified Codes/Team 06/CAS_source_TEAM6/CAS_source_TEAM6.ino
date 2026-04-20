@@ -37,8 +37,8 @@ Krunal Bele - 22505577
 
 //Configuration
 
-const char* ap_ssid = "Team6_DogWifi";      // Change this name
-const char* ap_password = "team6rocks";  // Change this (8+ chars)
+const char* ap_ssid = "SWAS2026";      // Change this name
+const char* ap_password = "12345678";  // Change this (8+ chars)
 const float TOTAL_NORTH_OFFSET = -90.2;
 const float OBS_THRESHOLD = 150.0;
 const float SIDE_OBS_THRESHOLD = 80.0;

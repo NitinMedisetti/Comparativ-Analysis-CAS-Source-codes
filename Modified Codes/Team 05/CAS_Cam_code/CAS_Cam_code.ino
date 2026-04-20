@@ -4,8 +4,8 @@
 #include "esp_camera.h"
 
 // ==== Wi-Fi AP credentials ====
-const char* ssid = "Team-5-Project";
-const char* password = "password123";
+const char* ssid = "SWAS2026";
+const char* password = "12345678";
 
 // ==== Custom IP Configuration ====
 IPAddress local_IP(192, 168, 5, 1);

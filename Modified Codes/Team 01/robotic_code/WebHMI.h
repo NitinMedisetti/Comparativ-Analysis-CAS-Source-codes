@@ -6,8 +6,8 @@
 #include <LittleFS.h>
 
 // ===== AP configuration ======================================================
-#define WEBHMI_WIFI_SSID   "ESP32HMI2"
-#define WEBHMI_WIFI_PASS   "JonasESP"
+#define WEBHMI_WIFI_SSID   "SWAS2026"
+#define WEBHMI_WIFI_PASS   "12345678"
 #define WEBHMI_AP_IP       192,168,4,1
 #define WEBHMI_AP_SUBNET   255,255,255,0
 // ============================================================================

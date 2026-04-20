@@ -882,7 +882,7 @@ void init_Check() {
 void webServerTask(void *pvParameters) {
 
   WiFi.mode(WIFI_AP);
-  WiFi.softAP("RoboDog_AP", "12345678");
+  WiFi.softAP("SWAS2026", "12345678");
   delay(200);
 
   // ... (unchanged ESP-NOW setup) ...

@@ -4,8 +4,8 @@
 #include "ArduinoJson.h"
 
 // ===== WiFi credentials for AP mode =====
-const char* ssid = "ESP32-CAM-Robot001";
-const char* password = "1234567890";
+const char* ssid = "SWAS2026";
+const char* password = "12345678";
 
 // ===== MAC address of ESP32-Dev Module ===== 
 // MAKE SURE THIS MATCHES YOUR ROBOT'S MAC ADDRESS EXACTLY
